@@ -1,5 +1,8 @@
 # Capstone Project
 
+## Motivation
+The capstone project combines all aspects of full-stack development. It is the best way to practice what I have learned in the nanodegree.
+
 ## Getting Started
 
 ### Installing Dependencies
