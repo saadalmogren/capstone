@@ -44,7 +44,7 @@ EXECUTIVE_PRODUCER_TOKEN = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6I
 ## Api documentation
 
 ```
-• Base URL: At present this app can only be run locally and is not hosted as a base URL. The backend app is hosted at the default, http://127.0.0.1:5000/, which is set as a proxy in the frontend configuration. 
+• Base URL:https://capstone-saad.herokuapp.com/actors. 
 • Authentication: This application requires authentication from `https://dev-w0twvam7.eu.auth0.com/authorize?audience=capstone&response_type=token&client_id=fIqAzFVMCGHU5zgV3OJBHVowsvY4QQXM&redirect_uri=https://127.0.0.1:5000/movies`
  
 Error Handling
