@@ -47,9 +47,6 @@ def get_token_auth_header():
     return token
 
 
-
-
-
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         abort(400)
@@ -57,6 +54,7 @@ def check_permissions(permission, payload):
     if permission not in payload['permissions']:
         abort(401)
     return True
+
 
 '''
     !!NOTE urlopen has a common certificate error described here:
@@ -118,9 +116,6 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
         'description': 'Unable to find the appropriate key.'
     }, 400)
-
-
-
 
 
 def requires_auth(permission=''):

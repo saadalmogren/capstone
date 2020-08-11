@@ -2,10 +2,12 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import setup_db,Movie, Actor, Role
+from models import setup_db, Movie, Actor, Role
 from auth import AuthError, requires_auth
 
 ITEMS_PER_PAGE = 10
+
+
 def paginate(request, selection):
     page = request.args.get('page', 1, type=int)
     start = (page - 1) * ITEMS_PER_PAGE
@@ -14,6 +16,7 @@ def paginate(request, selection):
     items = [item.format() for item in selection]
 
     return items[start:end]
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -34,24 +37,21 @@ def create_app(test_config=None):
             'actors': actors_format
         })
 
-
-    
     @app.route('/movies')
     @requires_auth('get:movies')
     def get_movies(payload):
         movies = Movie.query.all()
         movie_format = paginate(request, movies)
-        if len(movie_format)==0:
+        if len(movie_format) == 0:
             abort(404)
         return jsonify({
             'success': True,
             'movies': movie_format
         })
 
-    
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
-    def delete_actor(actor_id, payload):
+    def delete_actor(payload, actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
@@ -61,10 +61,9 @@ def create_app(test_config=None):
             'actor_id': actor_id
         })
 
-    
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
     @requires_auth('delete:movies')
-    def delete_movie(movie_id, payload):
+    def delete_movie(payload, movie_id):
         movie = Movie.query.get(movie_id)
         if movie is None:
             abort(404)
@@ -74,7 +73,6 @@ def create_app(test_config=None):
             'movie_id': movie_id
         })
 
-    
     @app.route('/actors', methods=['POST'])
     @requires_auth('post:actors')
     def create_actor(payload):
@@ -94,7 +92,6 @@ def create_app(test_config=None):
             'actor': actor.format()
         })
 
-    
     @app.route('/movies', methods=['POST'])
     @requires_auth('post:movies')
     def create_movie(payload):
@@ -110,10 +107,9 @@ def create_app(test_config=None):
             'movie': movie.format()
         })
 
-    
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
-    def modify_actor(actor_id, payload):
+    def modify_actor(payload, actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
@@ -134,10 +130,9 @@ def create_app(test_config=None):
             'actor': actor.format()
         })
 
-    
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
-    def modify_movie(movie_id):
+    def modify_movie(payload, movie_id):
         movie = Movie.query.get(movie_id)
         if movie is None:
             abort(404)
@@ -164,7 +159,8 @@ def create_app(test_config=None):
             'error': 404,
             'message': 'RESOURCE NOT FOUND!'
 
-        }),404
+        }), 404
+
     @app.errorhandler(422)
     def unproccesable(error):
         return jsonify({
@@ -172,7 +168,8 @@ def create_app(test_config=None):
             'error': 422,
             'message': 'UNPROCESSABLE ENTITY!'
 
-        }),422
+        }), 422
+
     @app.errorhandler(405)
     def not_allowed(error):
         return jsonify({
@@ -180,14 +177,15 @@ def create_app(test_config=None):
             'error': 405,
             'message': 'METHOD NOT ALLOWED!'
 
-        }),405
+        }), 405
+
     @app.errorhandler(AuthError)
     def auth_error(e):
         return jsonify(e.error), e.status_code
-        
-    
 
     return app
+
+
 app = create_app()
 if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

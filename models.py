@@ -25,7 +25,7 @@ class Movie(db.Model):
                             lazy=True, cascade='all, delete')
 
     def __init__(self, title, release_date):
-        
+
         self.title = title
         self.release_date = release_date
 
@@ -56,6 +56,7 @@ class Actor(db.Model):
     gender = db.Column(db.String(), nullable=False)
     roles = db.relationship('Role', backref='actor',
                             lazy=True, cascade='all, delete')
+
     def __init__(self, name, age, gender):
         self.name = name
         self.age = age
@@ -84,8 +85,11 @@ class Actor(db.Model):
 class Role(db.Model):
     __tablename__ = "roles"
     name = db.Column(db.String(), primary_key=True)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), primary_key=True)
-    actor_id = db.Column(db.Integer, db.ForeignKey('actors.id'), primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey(
+        'movies.id'), primary_key=True)
+    actor_id = db.Column(db.Integer, db.ForeignKey(
+        'actors.id'), primary_key=True)
+
     def __init__(self, name, movie_id, actor_id):
         self.name = name
         self.movie_id = movie_id
